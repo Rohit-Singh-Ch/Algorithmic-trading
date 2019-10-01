@@ -188,8 +188,6 @@ def HA(df, cash, cname, fr):
     df['HA_Low']=round(d1, 2)
     df = df.reindex(columns=['Symbol','Open','High','Low','Close','HA_Close','HA_High','HA_Low','HA_Open','Time', 'cash'])
     print(df)
-    #logger.debug(df)
-    #log()
     
     
     for r in range(len(df)):
@@ -243,14 +241,14 @@ def conv(df3):
 
 
     dti=now.strftime("%Y-%m-%d")
-    date_time=dti+" 09:15:00"
+    date_time=dti+" 09:25:00"
     pattern = '%Y-%m-%d %H:%M:%S'
     fr = int(time.mktime(time.strptime(date_time, pattern)))
     fr=str(fr)
     
     
     dt_string = now.strftime("%d.%m.%Y")
-    dt_string = now.strftime("%d.%m.%Y")+" 09:25:00"
+    dt_string = now.strftime("%d.%m.%Y")+" 09:35:00"
     pattern = '%d.%m.%Y %H:%M:%S'
     to = int(time.mktime(time.strptime(dt_string, pattern)))
     to=str(to)
@@ -264,39 +262,8 @@ def conv(df3):
         fr=str(int(fr)+600)
         to=str(int(to)+600)
         time.sleep(1)
-        
-
-
-"""def log():
-    global logger
-    LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
-    logging.basicConfig(filename="output.log",level=logging.DEBUG, format= LOG_FORMAT) 
-    logger = logging.getLogger()"""
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-    
-    
-    
-
-
-
 
 fileread()
-
-#844347012(upendra chat id)
-#@algotradealert (Channel name)
-#1001005582487 (channel id)
 
 
 

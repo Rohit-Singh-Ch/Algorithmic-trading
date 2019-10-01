@@ -53,7 +53,6 @@ except IOError:
     print("app_secret.txt file does not exist")
 is_async = False #(By default False, Change to True for asnyc API calls.))
 fyers = fyersModel.FyersModel(is_async)
-#print(fyers)
 
 #Here we check the profile through the token
 #comment the print so we can't get again and agian profile
@@ -62,7 +61,7 @@ print(profile)"""
 
 op=0
 cl=0
-cname = ""
+stock = ""
 name=""
 #This is fileread function which read the excel file where we store the Symbol, Cash value, Heikin Ashi (open & close)
 
@@ -70,118 +69,113 @@ def fileread():
     excel_file = 'company1.xls' #file present in same directory so its realtive path
     df3 = pd.read_excel(excel_file)
 
-    conv(df3)
+    timeconvert(df3)
 
-def xyz(fr,to,tim, df3,p):
+def datafetch(fr,to,tim, df3,p):
     global mydf
-    print("fr=",fr)
-    print("to=",to)
     newdf = pd.DataFrame()
     for row in df3.iterrows():
         global name
         name=row[1][0]
-        cname="NSE:"+name+"-EQ"
-        token="gAAAAABdhc8NbZjewX8v8EZhOiM3RvqATj7TWZ-x_ccwY-Itl72hikJmVmABi92c_khQySt1CzYZPwwDBcWiBX3YoWiFmNQLHabk_HJMcmrbEgczK89vEQA="
-        data1 = fyers.get_historical_OHLCV(
-        token = token,
-        data = {
-        "symbol" : cname,
-        "resolution" : "1",
-        "From" :fr ,
-        "to" :to
+        stock="NSE:"+name+"-EQ"
+        if name not in clist:
+            data1 = fyers.get_historical_OHLCV(
+            token = token,
+            data = {
+            "symbol" : stock,
+            "resolution" : "1",
+            "From" :fr ,
+            "to" :to
 
-        }
-        )
+            }
+            )
         
-        i=0
-        lo=0
-        up=0
-        print("symbol=",name)
-        print("time=",datetime.fromtimestamp(int(fr)))
-        df = pd.DataFrame(data1['data']) 
-        print("df=")
-        print(df)
-        ct=df['o'].count()
+            i=0
+            lowerlimit=0
+            upperlimit=0
+            df = pd.DataFrame(data1['data']) 
+            rowcount=df['o'].count()
         
-        loop = int(ct/tim)
-        print("loop=",loop)
-        for i in range(int(loop)):
-            print("hellollop")
-            ho=9
-            mini=15
-            lo=tim*i+0
+            loop = int(rowcount/tim)
+            for i in range(int(loop)):
+                hour=9
+                minute=15
+                lowerlimit=tim*i+0
                 
-            up=tim*(i+1)-1
-            mini=mini+(i+1)*tim
-            ho=ho+int(mini/60)
+                upperlimit=tim*(i+1)-1
+                minute=minute+(i+1)*tim
+                hour=hour+int(minute/60)
             
-            mini=mini%60
-            for _ in df[lo:up+1]:
-                cl=df.at[up,'c']
-                hi=max(df[lo:up+1]['h'])
-                low=min(df[lo:up+1]['l'])
-                op=df.at[lo,'o']
-        if loop == 0:
-            cl=float(df['c'])
-            op=float(df['o'])
-            low=float(df['l'])
-            hi=float(df['h'])
+                minute=minute%60
+            for _ in df[lowerlimit:upperlimit+1]:
+                cl=df.at[upperlimit,'c']
+                hi=max(df[lowerlimit:upperlimit+1]['h'])
+                low=min(df[lowerlimit:upperlimit+1]['l'])
+                op=df.at[lowerlimit,'o']
+            if loop == 0:
+                cl=float(df['c'])
+                op=float(df['o'])
+                low=float(df['l'])
+                hi=float(df['h'])
             
             
         
         newdf = newdf.append({'Symbol':row[1][0],'Open' : op, 'High' : hi, 'Low' : low, 'Close' : cl, 'Time' : datetime.fromtimestamp(int(fr))},  ignore_index = True)
-        newdf = newdf.reindex(columns=['Symbol','Open','High','Low','Close','Time'])
+        adf = newdf.reindex(columns=['Symbol','Open','High','Low','Close','Time'])
            
              
             
     
-    print("newdf")
-    print(newdf)
+    print(adf)
     if p==0:
         mydf[["Symbol","High","Low","Time"]]=newdf[["Symbol","High","Low","Time"]]
     else:
         for r in range(len(newdf)):
-            ranh=float(newdf.iloc[r]['High'])
-            
-            bodyh=float(mydf.iloc[r]['High'])
-            ranl=float(newdf.iloc[r]['Low'])
-            bodyl=float(mydf.iloc[r]['Low'])
+            newhigh=float(newdf.iloc[r]['High'])
+            oldhigh=float(mydf.iloc[r]['High'])
+            newlow=float(newdf.iloc[r]['Low'])
+            oldlow=float(mydf.iloc[r]['Low'])
                  
-            cna = newdf.iloc[r]['Symbol'] 
-            
-            if cna not in clist:
-                if ranh > bodyh:
+            stockname = newdf.iloc[r]['Symbol'] 
+            time = str(datetime.fromtimestamp(int(fr)))
+            if stockname not in clist:
+                if newhigh > oldhigh:
                     company=("STOCK="+newdf.iloc[r]['Symbol']+" high is broken")
-                    print(company)
+                    print(company, newhigh, oldhigh)
                     clist.append(newdf.iloc[r]['Symbol'])
-                elif ranl < bodyl:
+                    telegram(company, newhigh, oldhigh, time)
+                elif newlow < oldlow:
                     company=("STOCK="+newdf.iloc[r]['Symbol']+" low is broken")
-                    print(company)
+                    print(company, newlow, oldlow)
                     clist.append(newdf.iloc[r]['Symbol'])
-                    
-                """if ranh > bodyh or ranl < bodyl: 
-                    company = ("STOCK = "+newdf.iloc[r]['Symbol'])
-                    print(company)
-                    a = ("Date and Time="+str(datetime.fromtimestamp(int(fr))))
-                    clist.append(newdf.iloc[r]['Symbol'])"""
+                    telegram(company, newlow, oldlow, time)
                 
-    print("Mydf=")
-    print(mydf)
-       
+                
+
+####THIS IS A TELEGRAM FUNCTION ########
+# This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
+def telegram(company, newvalue, oldvlaue, time):
+    bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
+    bot_chatID = '844347012'
+    bot_message = company + "\n" + "New Value = " + str(newvalue) + "\n" + "Old Value = " + str(oldvlaue) + "\n" + "Time = " + time
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+    response = requests.get(send_text)
+    return response.json()
+    
+                  
+##### TELEGRAM FUNCTION END #########        
     
 
 
 
 
-def conv(df3):
+def timeconvert(df3):
    
     #now = datetime.today() - timedelta(days=1)
-    #print(now)
-    #print(type(now))
+    
     now = datetime.now()
     
     dti=now.strftime("%d.%m.%Y")
-    #print("date=",dti)
     
     
     date_time=dti+"  09:15:00"
@@ -190,10 +184,8 @@ def conv(df3):
     fr=str(fr)
     tof=fr
 
-    #dt_string = now.strftime("%d.%m.%Y %H:%M:%S")
     dt_string = now.strftime("%d.%m.%Y")
     dt_string = now.strftime("%d.%m.%Y")+"  09:45:00"
-    #print("date and time =", dt_string)
     pattern = '%d.%m.%Y %H:%M:%S'
     to = int(time.mktime(time.strptime(dt_string, pattern)))
     to=str(to)
@@ -202,22 +194,13 @@ def conv(df3):
     tim = 30
     
     for p in range(331):
-        xyz(fr,to,tim,df3,p)
-        print("fr=previous",fr)
+        datafetch(fr,to,tim,df3,p)
         if(fr == tof):
             fr=str(int(fr)+1800)
             to=fr
-            print("hello")
-            print(fr)
-            print(to)
         else:
             fr=str(int(fr)+60)
             to=fr
-            #print("fr=",fr)
-            #print("to=",to)
-           #print(fr)
-           #print(to)
-            
         time.sleep(1)
 
 
