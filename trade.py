@@ -36,7 +36,7 @@ response = app_session.auth()
 
 
 #Now we generate the access token
-#you have toh generate the authorization_code after in active
+#you have to generate the authorization_code after in active
 #Again we comment the app_session.generate_token(), we copy the token
 try:
     authorization_code = open("authorization_code.txt", "r").read()   
@@ -64,7 +64,7 @@ print(profile)"""
 
 op=0
 cl=0
-cname = ""
+stock = ""
 name=""
 #This is fileread function which read the excel file where we store the Symbol, Cash value, Heikin Ashi (open & close)
 def fileread():
@@ -74,27 +74,27 @@ def fileread():
     except IOError:
         print("company.xls' file does not exist")
     df3 = pd.read_excel(excel_file)
-    conv(df3)
+    timeconvert(df3)
     
 ######## SYMBOL FETCHING DATA FUNCTION START ###########    
 #This is datafetch function which fetch the historical data of 1 min & we consolidate the 1 min data to 15 min data
-#We call the fileread function here to to read the excel file 
+#We call the fileread function here to read the excel file 
 def datafetch(fr,to,tim, df3):
     global date_time
     newdf = pd.DataFrame()
     for row in df3.iterrows():
         global name
         name=row[1][0]
-        cname="NSE:"+name+"-EQ"
+        stock="NSE:"+name+"-EQ"
         op=row[1][1]
         cl=row[1][2]
-        cash=row[1][3]
+        cashValue=row[1][3]
        
            
         data1 = fyers.get_historical_OHLCV(
         token = token,
         data = {
-        "symbol" : cname,
+        "symbol" : stock,
         "resolution" : "1",
         "From" :fr ,
         "to" :to
@@ -132,8 +132,8 @@ def datafetch(fr,to,tim, df3):
             ran=abs(hi-low)
             body=abs(op-cl)
             half=ran/2
-        newdf = newdf.append({'cash': cash, 'Symbol':row[1][0],'Open' : op, 'High' : hi, 'Low' : low, 'Close' : cl, 'Time' : datetime.fromtimestamp(int(fr))},  ignore_index = True)
-    HA(newdf, cash, cname, fr)           
+        newdf = newdf.append({'CashValue': cashValue, 'Symbol':row[1][0],'Open' : op, 'High' : hi, 'Low' : low, 'Close' : cl, 'Time' : datetime.fromtimestamp(int(fr))},  ignore_index = True)
+    HA(newdf, cashValue, stock, fr)           
     
 ######## SYMBOL FETCHING DATA FUNCTION END ###########    
    
@@ -146,11 +146,12 @@ def datafetch(fr,to,tim, df3):
 ovalue = []				
 cvalue = []
 
-def HA(df, cash, cname, fr):
+def HA(df, cashValue, stock, fr):
     cna=""
-    a = (df['Open']+ df['High']+ df['Low']+df['Close'])/4.0
-    a1 = round(a/ 0.05) * 0.05
-    df['HA_Close'] = round(a1, 2)
+    ha_cl = (df['Open']+ df['High']+ df['Low']+df['Close'])/4.0
+    ha_cl1 = round(ha_cl/ 0.05) * 0.05
+    df['HA_Close'] = round(ha_cl1, 2)
+    
     workbook = xlrd.open_workbook('company.xls')
     worksheet = workbook.sheet_by_name('Sheet1')
     idx = df.index.name
@@ -158,18 +159,18 @@ def HA(df, cash, cname, fr):
     temp=1	
     for i in range(0, len(df)):
         if (str(df.iloc[i]['Time']) == date_time):
-            b = (worksheet.cell_value(temp, 1) + (worksheet.cell_value(temp, 2))) / float(2)
-            b1 = round(b/ 0.05)*0.05
-            df.set_value(i, 'HA_Open', b1)
+            ha_op = (worksheet.cell_value(temp, 1) + (worksheet.cell_value(temp, 2))) / float(2)
+            ha_op1 = round(ha_op/ 0.05)*0.05
+            df.set_value(i, 'HA_Open', ha_op1)
             temp = temp + 1
             ovalue.append(df.iloc[i]['HA_Open'])
             cvalue.append(df.iloc[i]['HA_Close'])
             
 
         else:
-            b = (ovalue[i] + cvalue[i]) / float(2)
-            b1 = round(b/ 0.05) * 0.05
-            df.set_value(i, 'HA_Open', b1)
+            ha_op = (ovalue[i] + cvalue[i]) / float(2)
+            ha_op1 = round(ha_op/ 0.05) * 0.05
+            df.set_value(i, 'HA_Open', ha_op1)
             ovalue[i] = df.iloc[i]['HA_Open']
             cvalue[i] = df.iloc[i]['HA_Close']
             
@@ -178,14 +179,14 @@ def HA(df, cash, cname, fr):
     if idx:
         df.set_index(idx, inplace=True)
 
-    c = df[['HA_Open','HA_Close','High']].max(axis=1)
-    c1 = round(c/ 0.05) * 0.05
-    df['HA_High']= round(c1, 2)
+    ha_hi = df[['HA_Open','HA_Close','High']].max(axis=1)
+    ha_hi1 = round(ha_hi/ 0.05) * 0.05
+    df['HA_High']= round(ha_hi1, 2)
     
-    d = df[['HA_Open','HA_Close','Low']].min(axis=1)
-    d1 = round(d/ 0.05) * 0.05
-    df['HA_Low']=round(d1, 2)
-    df = df.reindex(columns=['Symbol','Open','High','Low','Close','HA_Close','HA_High','HA_Low','HA_Open','Time', 'cash'])
+    ha_low = df[['HA_Open','HA_Close','Low']].min(axis=1)
+    ha_low1 = round(ha_low/ 0.05) * 0.05
+    df['HA_Low']=round(ha_low1, 2)
+    df = df.reindex(columns=['Symbol','Open','High','Low','Close','HA_Close','HA_High','HA_Low','HA_Open','Time', 'CashValue'])
     print(df)
     
     
@@ -194,20 +195,13 @@ def HA(df, cash, cname, fr):
         body=float(abs(df.iloc[r]['HA_Open']-df.iloc[r]['HA_Close']))
         half=ran/5
         cna = df.iloc[r]['Symbol'] #Isme for loop abhi jis company ka naam read kr rha h uska naam h (symbol)
-        cash = worksheet.cell_value(r+1, 3) #excel symbol location + increment
+        cashValue = worksheet.cell_value(r+1, 3) #excel symbol location + increment
         if cna not in clist:
-            if body > half and(cash/2) < ran <= (cash*1.01):         #ran <= cash
+            if body > half and(cashValue/2) < ran <= (cashValue*1.01):         #ran <= cashValue
                 company = ("STOCK = "+df.iloc[r]['Symbol'])
                 a = ("Date and Time="+str(datetime.fromtimestamp(int(fr))))
                 clist.append(df.iloc[r]['Symbol'])
                 telegram(a,company,(df.iloc[r]['HA_Close']),(df.iloc[r]['HA_High']),(df.iloc[r]['HA_Low']),(df.iloc[r]['HA_Open']))
-            
-
-        
-
-        
-    
-   
 
 ####### HEIKIN ASHI FUNCTION END #############            
             
@@ -217,24 +211,23 @@ def HA(df, cash, cname, fr):
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
 def telegram(a,company,cl,hi,low,op):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '@algotradealert'
+    bot_chatID = '844347012'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n" + a + "\n" + "Open =" +  str(op) + "\n" + "High =" + str(hi) + "\n" + "Low =" + str(low) + "\n" + "Close =" + str(cl)
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
     response = requests.get(send_text)
     return response.json()
     
-                  
 ##### TELEGRAM FUNCTION END #########     
 
 #This is time & date converter function
 # To fectch the historical data by using fyers api we have to take Unix timestamp time format which a little bit difficult to understand
-# So here we firstaly convert the time into Unix timestamp and send it to the datafetch function and then print the local time
-def conv(df3):
+# So here we firstaly convert the local_time into Unix timestamp and send it to the datafetch function and then print the local_time
+def timeconvert(df3):
     global date_time
    
-    #now = datetime.today() - timedelta(days=1)
+    now = datetime.today() - timedelta(days=1)  #if you want to work on previoius day data
     
-    now = datetime.now()
+    #now = datetime.now()  #for current day data
     
 
 
