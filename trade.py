@@ -13,6 +13,9 @@ from datetime import date
 import schedule
 import os.path
 import logging
+import os
+import xlsxwriter
+from openpyxl import Workbook
 clist = []
 date_time = ""
 logger = ""
@@ -189,7 +192,14 @@ def HA(df, cashValue, stock, fr):
     df = df.reindex(columns=['Symbol','Open','High','Low','Close','HA_Close','HA_High','HA_Low','HA_Open','Time', 'CashValue'])
     print(df)
     
+    # Get full path for writing.
+    name = "HAOUTPUT-" + str(date.today()) + ".txt"
+    print("NAME", name) 
+    with open(name, "a") as f:
+        # Write data to file.
+        f.write(str(df))    
     
+
     for r in range(len(df)):
         ran=float(abs(df.iloc[r]['HA_High']-df.iloc[r]['HA_Low']))
         body=float(abs(df.iloc[r]['HA_Open']-df.iloc[r]['HA_Close']))
@@ -213,10 +223,24 @@ def telegram(a,company,cl,hi,low,op):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
     bot_chatID = '844347012'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n" + a + "\n" + "Open =" +  str(op) + "\n" + "High =" + str(hi) + "\n" + "Low =" + str(low) + "\n" + "Close =" + str(cl)
+    
+
+    # Get full path for writing.
+    name = "ALERTOUPUT-" + str(date.today()) + ".txt"
+    print("NAME", name)
+    with open(name, "a") as f:
+        # Write data to file.
+        f.write(bot_message)
+
+    
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
     response = requests.get(send_text)
     return response.json()
+
+       
     
+    
+
 ##### TELEGRAM FUNCTION END #########     
 
 #This is time & date converter function
