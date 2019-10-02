@@ -154,10 +154,10 @@ def datafetch(fr,to,tim, df3,p):
 
 ####THIS IS A TELEGRAM FUNCTION ########
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
-def telegram(company, newvalue, oldvlaue, time):
+def telegram(company, closevalue, oldvlaue, time):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
     bot_chatID = '844347012'
-    bot_message = company + "\n" + "New Value = " + str(newvalue) + "\n" + "Old Value = " + str(oldvlaue) + "\n" + "Time = " + time
+    bot_message = company + "\n" + "Close Value = " + str(closevalue) + "\n" + "Old Value = " + str(oldvlaue) + "\n" + "Time = " + time
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
     response = requests.get(send_text)
     return response.json()
@@ -177,7 +177,6 @@ def timeconvert(df3):
     
     dti=now.strftime("%d.%m.%Y")
     
-    
     date_time=dti+"  09:15:00"
     pattern = '%d.%m.%Y %H:%M:%S'
     fr = int(time.mktime(time.strptime(date_time, pattern)))
@@ -189,7 +188,6 @@ def timeconvert(df3):
     pattern = '%d.%m.%Y %H:%M:%S'
     to = int(time.mktime(time.strptime(dt_string, pattern)))
     to=str(to)
-   
     
     tim = 30
     
@@ -199,10 +197,9 @@ def timeconvert(df3):
             fr=str(int(fr)+1800)
             to=fr
         else:
-            fr=str(int(fr)+60)
+            fr=str(int(fr)+300)
             to=fr
         time.sleep(1)
-
 
 fileread()
 

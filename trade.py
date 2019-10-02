@@ -16,7 +16,6 @@ import logging
 clist = []
 date_time = ""
 logger = ""
-#import stock3
 
 
 #Here we generate the authorization_code to authorize the app 
@@ -78,9 +77,9 @@ def fileread():
     conv(df3)
     
 ######## SYMBOL FETCHING DATA FUNCTION START ###########    
-#This is xyz function which fetch the historical data of 1 min & we consolidate the 1 min data to 15 min data
+#This is datafetch function which fetch the historical data of 1 min & we consolidate the 1 min data to 15 min data
 #We call the fileread function here to to read the excel file 
-def xyz(fr,to,tim, df3):
+def datafetch(fr,to,tim, df3):
     global date_time
     newdf = pd.DataFrame()
     for row in df3.iterrows():
@@ -104,8 +103,8 @@ def xyz(fr,to,tim, df3):
         )
         
         i=0
-        lo=0
-        up=0
+        lowerlimit=0
+        upperlimit=0
         
         df = pd.DataFrame(data1['data']) 
     
@@ -115,21 +114,21 @@ def xyz(fr,to,tim, df3):
        
         for i in range(int(loop)):
             
-            ho=9
-            mini=15
-            lo=tim*i+0
+            hour=9
+            minute=15
+            lowerlimit=tim*i+0
                 
-            up=tim*(i+1)-1
-            mini=mini+(i+1)*tim
-            ho=ho+int(mini/60)
+            upperlimit=tim*(i+1)-1
+            minute=minute+(i+1)*tim
+            hour=hour+int(minute/60)
             
-            mini=mini%60
-            for _ in df[lo:up+1]:
-                cl=df.at[up,'c']
-                hi=max(df[lo:up+1]['h'])
+            minute=minute%60
+            for _ in df[lowerlimit:upperlimit+1]:
+                cl=df.at[upperlimit,'c']
+                hi=max(df[lowerlimit:upperlimit+1]['h'])
                 #print ("hi -->", hi)
-                low=min(df[lo:up+1]['l'])
-                op=df.at[lo,'o']
+                low=min(df[lowerlimit:upperlimit+1]['l'])
+                op=df.at[lowerlimit,'o']
             ran=abs(hi-low)
             body=abs(op-cl)
             half=ran/2
@@ -201,7 +200,7 @@ def HA(df, cash, cname, fr):
                 company = ("STOCK = "+df.iloc[r]['Symbol'])
                 a = ("Date and Time="+str(datetime.fromtimestamp(int(fr))))
                 clist.append(df.iloc[r]['Symbol'])
-                tele(a,company,(df.iloc[r]['HA_Close']),(df.iloc[r]['HA_High']),(df.iloc[r]['HA_Low']),(df.iloc[r]['HA_Open']))
+                telegram(a,company,(df.iloc[r]['HA_Close']),(df.iloc[r]['HA_High']),(df.iloc[r]['HA_Low']),(df.iloc[r]['HA_Open']))
             
 
         
@@ -216,7 +215,7 @@ def HA(df, cash, cname, fr):
         
 ####THIS IS A TELEGRAM FUNCTION ########
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
-def tele(a,company,cl,hi,low,op):
+def telegram(a,company,cl,hi,low,op):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
     bot_chatID = '@algotradealert'
     bot_message = company + "\n" + a + "\n" + "Open =" +  str(op) + "\n" + "High =" + str(hi) + "\n" + "Low =" + str(low) + "\n" + "Close =" + str(cl)
@@ -229,7 +228,7 @@ def tele(a,company,cl,hi,low,op):
 
 #This is time & date converter function
 # To fectch the historical data by using fyers api we have to take Unix timestamp time format which a little bit difficult to understand
-# So here we firstaly convert the time into Unix timestamp and send it to the xyz function and then print the local time
+# So here we firstaly convert the time into Unix timestamp and send it to the datafetch function and then print the local time
 def conv(df3):
     global date_time
    
@@ -258,7 +257,7 @@ def conv(df3):
     
     for _ in range(42):
         
-        xyz(fr,to,tim,df3)
+        datafetch(fr,to,tim,df3)
         fr=str(int(fr)+600)
         to=str(int(to)+600)
         time.sleep(1)
