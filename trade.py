@@ -69,10 +69,10 @@ name=""
 #This is fileread function which read the excel file where we store the Symbol, Cash value, Heikin Ashi (open & close)
 def fileread():
     try:
-        excel_file = 'company.xls' #file present in same directory so its realtive path
+        excel_file = 'StockList.xls' #file present in same directory so its realtive path
         
     except IOError:
-        print("company.xls' file does not exist")
+        print("StockList.xls' file does not exist")
     df3 = pd.read_excel(excel_file)
     timeconvert(df3)
     
@@ -141,7 +141,7 @@ def datafetch(fr,to,tim, df3):
 # This is Heikin Ashi function were we convert the 15min consolidate data into heikin ashi candle
 # Heikin ashi candle values are based on the Heikin ashi fourmulas
 # There are total 4 fourmulas in which 3 are simple but to calculate the Heikin ashi Open first candle we have to take previous day Heikin ashi (Open + Close)/2
-# Therefore we store Heikin ashi Open & Close value into company.xls file
+# Therefore we store Heikin ashi Open & Close value into StockList.xls file
 # In this function we generate the alert system and get a alert on telegram
 ovalue = []				
 cvalue = []
@@ -152,7 +152,7 @@ def HA(df, cashValue, stock, fr):
     ha_cl1 = round(ha_cl/ 0.05) * 0.05
     df['HA_Close'] = round(ha_cl1, 2)
     
-    workbook = xlrd.open_workbook('company.xls')
+    workbook = xlrd.open_workbook('StockList.xls')
     worksheet = workbook.sheet_by_name('Sheet1')
     idx = df.index.name
     df.reset_index(inplace=True)
