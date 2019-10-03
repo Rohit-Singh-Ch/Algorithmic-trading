@@ -219,7 +219,7 @@ def HA(df, cashValue, stock, fr):
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
 def telegram(a,company,cl,hi,low,op):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '@algotradealert'  #paste your chatid where you want to send alert(group or channel or personal)
+    bot_chatID = '-1001346495883'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n" + a + "\n" + "Open =" +  str(op) + "\n" + "High =" + str(hi) + "\n" + "Low =" + str(low) + "\n" + "Close =" + str(cl)
     
 
@@ -246,9 +246,9 @@ def telegram(a,company,cl,hi,low,op):
 def timeconvert(df3):
     global date_time
    
-    #now = datetime.today() - timedelta(days=1)  #if you want to work on previoius day data
+    now = datetime.today() - timedelta(days=1)  #if you want to work on previoius day data
     
-    now = datetime.now()  #for current day data
+    #now = datetime.now()  #for current day data
     
 
 
