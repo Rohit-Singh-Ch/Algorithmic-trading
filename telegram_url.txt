@@ -1,0 +1,5 @@
+send message through bot link = https://api.telegram.org/bot986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw/sendMessage?chat_id=@algotradealert&text=test%20message
+
+
+
+check bot message = https://api.telegram.org/bot986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw/getUpdates
