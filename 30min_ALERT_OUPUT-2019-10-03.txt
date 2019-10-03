@@ -1,0 +1,7 @@
+STOCK=MARUTI close is less than low
+6720.0
+High =6794.95
+Low =6730.0STOCK=SRTRANSFIN close is less than low
+1038.1
+High =1054.9
+Low =1042.8

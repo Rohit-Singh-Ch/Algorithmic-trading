@@ -10,8 +10,6 @@ import requests
 from datetime import datetime
 from datetime import timedelta
 import urllib.request
-
-
 import os.path
 
 
@@ -33,9 +31,6 @@ a = response['data']['authorization_code']
 file1 = open("authorization_code.txt", "w")
 file1.write(a)
 file1.close()
-
-
-
 
 
 #Now we generate the access token
@@ -71,8 +66,3 @@ except IOError:
     print("app_secret.txt file does not exist")
 is_async = False #(By default False, Change to True for asnyc API calls.))
 fyers = fyersModel.FyersModel(is_async)
-
-
-
-
-

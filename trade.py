@@ -4,7 +4,6 @@ import pandas as pd
 from pandas import DataFrame
 import time
 import datetime
-import time
 import xlrd
 import requests
 from datetime import datetime
@@ -193,8 +192,7 @@ def HA(df, cashValue, stock, fr):
     print(df)
     
     # Get full path for writing.
-    name = "HAOUTPUT-" + str(date.today()) + ".txt"
-    print("NAME", name) 
+    name = "HA_OUTPUT-" + str(date.today()) + ".txt"
     with open(name, "a") as f:
         # Write data to file.
         f.write(str(df))    
@@ -221,13 +219,12 @@ def HA(df, cashValue, stock, fr):
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
 def telegram(a,company,cl,hi,low,op):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '844347012'  #paste your chatid where you want to send alert(group or channel or personal)
+    bot_chatID = '@algotradealert'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n" + a + "\n" + "Open =" +  str(op) + "\n" + "High =" + str(hi) + "\n" + "Low =" + str(low) + "\n" + "Close =" + str(cl)
     
 
     # Get full path for writing.
-    name = "ALERTOUPUT-" + str(date.today()) + ".txt"
-    print("NAME", name)
+    name = "ALERT_OUPUT-" + str(date.today()) + ".txt"
     with open(name, "a") as f:
         # Write data to file.
         f.write(bot_message)
@@ -249,22 +246,22 @@ def telegram(a,company,cl,hi,low,op):
 def timeconvert(df3):
     global date_time
    
-    now = datetime.today() - timedelta(days=1)  #if you want to work on previoius day data
+    #now = datetime.today() - timedelta(days=1)  #if you want to work on previoius day data
     
-    #now = datetime.now()  #for current day data
+    now = datetime.now()  #for current day data
     
 
 
 
     dti=now.strftime("%Y-%m-%d")
-    date_time=dti+" 09:25:00"
+    date_time=dti+" 09:15:00"
     pattern = '%Y-%m-%d %H:%M:%S'
     fr = int(time.mktime(time.strptime(date_time, pattern)))
     fr=str(fr)
     
     
     dt_string = now.strftime("%d.%m.%Y")
-    dt_string = now.strftime("%d.%m.%Y")+" 09:35:00"
+    dt_string = now.strftime("%d.%m.%Y")+" 09:25:00"
     pattern = '%d.%m.%Y %H:%M:%S'
     to = int(time.mktime(time.strptime(dt_string, pattern)))
     to=str(to)

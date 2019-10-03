@@ -22,7 +22,7 @@
        
        + file1.py
        + file2.py
-       + company.xls
+       + StockList.xls
        + api_id.txt
        + app_secret.txt
        + authorization_code.txt
