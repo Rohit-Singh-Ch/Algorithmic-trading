@@ -131,9 +131,9 @@ def datafetch(fr,to,tim, df3):
                 #print ("hi -->", hi)
                 low=min(df[lowerlimit:upperlimit+1]['l'])
                 op=df.at[lowerlimit,'o']
-            ran=abs(hi-low)
-            body=abs(op-cl)
-            half=ran/2
+            #ran=abs(hi-low)
+            #body=abs(op-cl)
+            #half=ran/2
         newdf = newdf.append({'CashValue': cashValue, 'Symbol':row[1][0],'Open' : op, 'High' : hi, 'Low' : low, 'Close' : cl, 'Time' : datetime.fromtimestamp(int(fr))},  ignore_index = True)
     HA(newdf, cashValue, stock, fr)           
     

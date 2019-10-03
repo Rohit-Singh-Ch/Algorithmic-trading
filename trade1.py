@@ -70,21 +70,21 @@ def fileread():
     excel_file = 'company1.xls' #file present in same directory so its realtive path
     df3 = pd.read_excel(excel_file)
 
-    conv(df3)
+    timeconvert(df3)
 
-def xyz(fr,to,tim, df3,p):
+def datafetch(fr,to,tim, df3,p):
     global mydf
     
     newdf = pd.DataFrame()
     for row in df3.iterrows():
         global name
         name=row[1][0]
-        cname="NSE:"+name+"-EQ"
+        stock="NSE:"+name+"-EQ"
         if name not in clist:
             data1 = fyers.get_historical_OHLCV(
             token = token,
             data = {
-            "symbol" : cname,
+            "symbol" : stock,
             "resolution" : "1",
             "From" :fr ,
             "to" :to
@@ -126,17 +126,6 @@ def xyz(fr,to,tim, df3,p):
                 clist.append(newdf.iloc[r]['Symbol'])
                 telegram(company, close, high, low)
 
-"""if stockname not in clist:
-                if newhigh > oldhigh:
-                    company=("STOCK="+newdf.iloc[r]['Symbol']+" high is broken")
-                    print(company, newhigh, oldhigh)
-                    clist.append(newdf.iloc[r]['Symbol'])
-                    telegram(company, newhigh, oldhigh, time)
-                elif newlow < oldlow:
-                    company=("STOCK="+newdf.iloc[r]['Symbol']+" low is broken")
-                    print(company, newlow, oldlow)
-                    clist.append(newdf.iloc[r]['Symbol'])
-                    telegram(company, newlow, oldlow, time)"""
 
 ####THIS IS A TELEGRAM FUNCTION ########
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
@@ -145,13 +134,11 @@ def telegram(company, close, high, low):
     bot_chatID = '@algotradealert'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n"  +  str(close) + "\n" + "High =" + str(high) + "\n" + "Low =" + str(low)
     
-
     # Get full path for writing.
     name = "30min_ALERT_OUPUT-" + str(date.today()) + ".txt"
     with open(name, "a") as f:
         # Write data to file.
         f.write(bot_message)
-
     
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
     response = requests.get(send_text)
@@ -162,14 +149,12 @@ def telegram(company, close, high, low):
 
 
 
-def conv(df3):
+def timeconvert(df3):
    
     #now = datetime.today() - timedelta(days=1)
     now = datetime.now()
     
     dti=now.strftime("%d.%m.%Y")
-    #print("date=",dti)
-    
     
     date_time=dti+"  09:15:00"
     pattern = '%d.%m.%Y %H:%M:%S'
@@ -177,19 +162,16 @@ def conv(df3):
     fr=str(fr)
     tof=fr
 
-    #dt_string = now.strftime("%d.%m.%Y %H:%M:%S")
     dt_string = now.strftime("%d.%m.%Y")
     dt_string = now.strftime("%d.%m.%Y")+"  09:45:00"
-    #print("date and time =", dt_string)
     pattern = '%d.%m.%Y %H:%M:%S'
     to = int(time.mktime(time.strptime(dt_string, pattern)))
     to=str(to)
-   
     
     tim = 30
     
     for p in range(331):
-        xyz(fr,to,tim,df3,p)
+        datafetch(fr,to,tim,df3,p)
         if(fr == tof):
             fr=str(int(fr)+1800)
             to=str(int(to)+300)
@@ -197,10 +179,6 @@ def conv(df3):
             fr=str(int(fr)+300)
             to=str(int(to)+300)
         tim=5    
-            #print("fr=",fr)
-            #print("to=",to)
-           #print(fr)
-           #print(to)
             
         time.sleep(1)
 
