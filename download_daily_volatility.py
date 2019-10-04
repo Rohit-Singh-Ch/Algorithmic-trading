@@ -152,7 +152,9 @@ fileread()
 
 #Download Daily_Volatility function
 def daily_volatility_download():
-    url = "https://www.nseindia.com/archives/nsccl/volt/CMVOLT_03102019.CSV"
+    tim = datetime.datetime.now()
+    url = "https://www.nseindia.com/archives/nsccl/volt/CMVOLT_" + str(tim.strftime('%d')) + "" + str(tim.strftime('%m')) + "" + str(tim.strftime('%Y')) + ".CSV"
+    print("url -->", url)   
     r = requests.get(url, verify=False,stream=True)
     if r.status_code!=200:
         print ("Failure!!")

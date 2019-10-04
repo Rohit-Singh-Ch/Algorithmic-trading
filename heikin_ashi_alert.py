@@ -189,7 +189,7 @@ def HA(df, cashValue, stock, fr):
     ha_low1 = round(ha_low/ 0.05) * 0.05
     df['HA_Low']=round(ha_low1, 2)
     df = df.reindex(columns=['Symbol','Open','High','Low','Close','HA_Close','HA_High','HA_Low','HA_Open','Time', 'CashValue'])
-    print(df)
+    #print(df)
     
     # Get full path for writing.
     name = "HA_OUTPUT-" + str(date.today()) + ".txt"

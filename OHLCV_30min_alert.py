@@ -115,24 +115,26 @@ def datafetch(fr,to,tim, df3,p):
             high=float(mydf.iloc[r]['High'])
             low=float(mydf.iloc[r]['Low'])
             cna = newdf.iloc[r]['Symbol'] 
-            if close>high:
-                company=("STOCK="+newdf.iloc[r]['Symbol']+"close is greater than high")
+            if close > high:
+                company=("STOCK="+newdf.iloc[r]['Symbol']+" close is greater than high")
                 print(company)
+                a = ("Date and Time="+str(datetime.fromtimestamp(int(fr))))
                 clist.append(newdf.iloc[r]['Symbol'])
-                telegram(company, close, high, low)
+                telegram(company, close, high, low,a)
             elif close < low:
                 company=("STOCK="+newdf.iloc[r]['Symbol']+" close is less than low")
                 print(company)
+                a = ("Date and Time="+str(datetime.fromtimestamp(int(fr))))
                 clist.append(newdf.iloc[r]['Symbol'])
-                telegram(company, close, high, low)
+                telegram(company, close, high, low,a)
 
 
 ####THIS IS A TELEGRAM FUNCTION ########
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
-def telegram(company, close, high, low):
+def telegram(company, close, high, low,a):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '844347012'  #paste your chatid where you want to send alert(group or channel or personal)
-    bot_message = company + "\n"  +  str(close) + "\n" + "High =" + str(high) + "\n" + "Low =" + str(low)
+    bot_chatID = '-1001346495883'  #paste your chatid where you want to send alert(group or channel or personal)
+    bot_message = company + "\n"  +  str(close) + "\n" + "High =" + str(high) + "\n" + "Low =" + str(low) +  "\n" + "Time =" + a
     
     # Get full path for writing.
     name = "30min_ALERT_OUPUT-" + str(date.today()) + ".txt"
