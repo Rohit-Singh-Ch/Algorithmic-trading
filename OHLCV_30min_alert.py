@@ -67,7 +67,7 @@ print(profile)"""
 
 
 def fileread():
-    excel_file = 'company1.xls' #file present in same directory so its realtive path
+    excel_file = 'StockList_30min.xls' #file present in same directory so its realtive path
     df3 = pd.read_excel(excel_file)
 
     timeconvert(df3)
@@ -131,7 +131,7 @@ def datafetch(fr,to,tim, df3,p):
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
 def telegram(company, close, high, low):
     bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '@algotradealert'  #paste your chatid where you want to send alert(group or channel or personal)
+    bot_chatID = '844347012'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n"  +  str(close) + "\n" + "High =" + str(high) + "\n" + "Low =" + str(low)
     
     # Get full path for writing.
