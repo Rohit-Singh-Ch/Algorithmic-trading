@@ -1,0 +1,81 @@
+STOCK = KOTAKBANK
+Date and Time=2019-10-03 09:35:00
+Open =1632.1000000000001
+High =1632.1
+Low =1622.0
+Close =1625.2STOCK = ICICIPRULI
+Date and Time=2019-10-03 09:55:00
+Open =467.6
+High =467.6
+Low =465.2
+Close =466.7STOCK = STAR
+Date and Time=2019-10-03 10:05:00
+Open =310.05
+High =311.65
+Low =309.7
+Close =310.6STOCK = INDIGO
+Date and Time=2019-10-03 12:05:00
+Open =1831.2
+High =1832.2
+Low =1823.25
+Close =1828.45STOCK = KOTAKBANK
+Date and Time=2019-10-03 09:35:00
+Open =1632.1000000000001
+High =1632.1
+Low =1622.0
+Close =1625.2STOCK = ICICIPRULI
+Date and Time=2019-10-03 09:55:00
+Open =467.6
+High =467.6
+Low =465.2
+Close =466.7STOCK = STAR
+Date and Time=2019-10-03 10:05:00
+Open =310.05
+High =311.65
+Low =309.7
+Close =310.6STOCK = INDIGO
+Date and Time=2019-10-03 12:05:00
+Open =1831.2
+High =1832.2
+Low =1823.25
+Close =1828.45STOCK = KOTAKBANK
+Date and Time=2019-10-03 09:35:00
+Open =1632.1000000000001
+High =1632.1
+Low =1622.0
+Close =1625.2STOCK = ICICIPRULI
+Date and Time=2019-10-03 09:55:00
+Open =467.6
+High =467.6
+Low =465.2
+Close =466.7STOCK = STAR
+Date and Time=2019-10-03 10:05:00
+Open =310.05
+High =311.65
+Low =309.7
+Close =310.6STOCK = INDIGO
+Date and Time=2019-10-03 12:05:00
+Open =1831.2
+High =1832.2
+Low =1823.25
+Close =1828.45STOCK = INFRATEL
+Date and Time=2019-10-04 09:25:00
+Open =247.70000000000002
+High =247.7
+Low =246.35
+Close =246.6STOCK = MARUTI
+Date and Time=2019-10-04 09:25:00
+Open =6776.8
+High =6807.0
+Low =6776.8
+Close =6794.95STOCK = CADILAHC
+Date and Time=2019-10-04 09:35:00
+Open =234.5
+High =235.5
+Low =234.1
+Close =235.05STOCK = M&M
+Date and Time=2019-10-04 09:45:00
+Open =559.65
+High =562.95
+Low =559.65
+Close =561.65
