@@ -20,9 +20,12 @@
 	
 10. All the file you have to keep in folder name Algo trading
        
-       + file1.py
-       + file2.py
-       + company.xls
+       + OHLCV_30min_alert.py
+       + heikin_ashi_alert.py
+	  + fyers_authorization.py
+       + download_daily_volatility.py
+       + StockList.xls
+	  + StockList_30.xls
        + api_id.txt
        + app_secret.txt
        + authorization_code.txt
