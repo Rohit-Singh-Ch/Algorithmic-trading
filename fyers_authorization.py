@@ -13,6 +13,7 @@ import urllib.request
 import os.path
 
 
+
 #Here we generate the authorization_code to authorize the app 
 #In visual studio code we have to print the response to get the authorization_code
 try:
