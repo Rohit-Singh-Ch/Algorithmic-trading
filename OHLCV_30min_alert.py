@@ -132,8 +132,8 @@ def datafetch(fr,to,tim, df3,p):
 ####THIS IS A TELEGRAM FUNCTION ########
 # This is a telegram function which is use only to generate the alert on channel #@algotradealert (Channel name)
 def telegram(company, close, high, low,a):
-    bot_token = '986625783:AAEmqQ2WVKVi3TgYn79Fd5aYvXoSKdObRZw'
-    bot_chatID = '-1001346495883'  #paste your chatid where you want to send alert(group or channel or personal)
+    bot_token = 'xx'
+    bot_chatID = 'xx'  #paste your chatid where you want to send alert(group or channel or personal)
     bot_message = company + "\n"  +  str(close) + "\n" + "High =" + str(high) + "\n" + "Low =" + str(low) +  "\n" + "Time =" + a
     
     # Get full path for writing.
@@ -186,8 +186,5 @@ def timeconvert(df3):
 
 
 fileread()
-
-#844347012(upendra chat id)
-#@algotradealert (Channel name)
 
 
